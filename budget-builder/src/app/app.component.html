@@ -1,0 +1,130 @@
+<div class="budget-builder p-4 bg-gray-100 min-h-screen">
+  <!-- Date Range Selectors -->
+  <div
+    class="flex justify-between items-center bg-white p-4 rounded-lg shadow-md mb-4"
+  >
+    <div class="flex gap-4">
+      <div class="flex flex-col">
+        <label class="text-gray-700 font-semibold mb-1">Start Month:</label>
+        <nz-date-picker
+          nzMode="month"
+          class="border rounded-md p-2"
+          [(ngModel)]="startMonth"
+          (ngModelChange)="updateMonths()"
+        ></nz-date-picker>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-gray-700 font-semibold mb-1">End Month:</label>
+        <nz-date-picker
+          nzMode="month"
+          class="border rounded-md p-2"
+          [(ngModel)]="endMonth"
+          (ngModelChange)="updateMonths()"
+        ></nz-date-picker>
+      </div>
+    </div>
+    <button
+      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow-md"
+      (click)="addRow()"
+    >
+      Add Row
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
+    <nz-table
+      #basicTable
+      [nzBordered]="true"
+      [nzData]="rows | keyvalue"
+      [nzScroll]="{ x: '1000px', y: '400px' }"
+      [nzSize]="'middle'"
+      [nzShowPagination]="false"
+      [nzFooter]="footerTemplate"
+      class="w-full border-gray-300"
+    >
+      <thead class="bg-gray-200">
+        <tr>
+          <th nzWidth="150px" nzLeft>Category</th>
+          <th
+            *ngFor="let month of months"
+            [nzWidth]="'150px'"
+            [nzEllipsis]="true"
+          >
+            {{ month }}
+          </th>
+          <th nzWidth="150px" nzRight>Subtotal</th>
+          <th nzWidth="150px" nzRight>Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <tr
+          *ngFor="let row of rows | keyvalue; let rowIndex = index"
+          class="hover:bg-gray-50"
+        >
+          <td nzLeft class="p-2">{{ row.value.category }}</td>
+          <td
+            *ngFor="let value of row.value.values; let colIndex = index"
+            class="p-2"
+          >
+            <input
+              (contextmenu)="
+                showContextMenu($event, { rowId: row.key, data: value })
+              "
+              nz-input
+              type="number"
+              [(ngModel)]="value.value"
+              class="w-full p-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              (keydown)="handleKeyNavigation($event, rowIndex, colIndex)"
+            />
+          </td>
+          <td nzRight class="p-2 text-gray-600">
+            {{ calculateRowSubtotal(row.value.values) }}
+          </td>
+          <td nzRight class="p-2">
+            <button
+              nz-button
+              nzDanger
+              nzSize="small"
+              class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+              (click)="deleteRow(row.value.id)"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <ng-template #footerTemplate>
+    <div class="bg-white border-t shadow-md p-3 mt-4">
+      <table class="w-full">
+        <tr>
+          <td class="font-semibold text-gray-700">Total Income:</td>
+          <td class="text-right">{{ totalIncome }}</td>
+        </tr>
+        <tr>
+          <td class="font-semibold text-gray-700">Total Expenses:</td>
+          <td class="text-right">{{ totalExpense }}</td>
+        </tr>
+        <tr>
+          <td class="font-semibold text-gray-700">Overall Total:</td>
+          <td class="text-right">{{ overallTotal }}</td>
+        </tr>
+      </table>
+    </div>
+  </ng-template>
+  <!-- Footer -->
+
+  <!-- Context Menu -->
+  <div
+    *ngIf="contextMenuVisible"
+    [style.left]="contextMenuX"
+    [style.top]="contextMenuY"
+    class="absolute bg-white border rounded-md shadow-lg p-2"
+  >
+    <button class="text-blue-600 focus:outline-none" (click)="applyToAll()">
+      Apply to All
+    </button>
+  </div>
+</div>

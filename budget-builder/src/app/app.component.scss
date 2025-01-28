@@ -1,0 +1,57 @@
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+.budget-builder {
+  max-width: 100%;
+}
+
+/* Date Range Selectors */
+.date-range-selectors {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.date-range-selectors label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.date-range-selectors input {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Add Row Button */
+button[nz-button] {
+  margin-bottom: 15px;
+}
+
+/* Scrollable Table */
+.nz-table {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.fixed-footer {
+  position: sticky;
+  bottom: 0;
+  background: white; /* Keeps footer background solid */
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+  border-top: 1px solid #ddd; /* Adds a border between table body and footer */
+}
+
+.nz-table-footer {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  z-index: 10;
+}
